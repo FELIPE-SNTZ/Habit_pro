@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 
-export default function RegisterScreen ({navigation}){
+export default function RegisterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-
         <View style={styles.header}>
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
           <Text style={styles.title}>Crie sua conta</Text>
         </View>
 
@@ -43,13 +42,12 @@ export default function RegisterScreen ({navigation}){
               secureTextEntry
             />
           </View>
-          <TouchableOpacity 
-            style={styles.button} >
+          <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Já tem uma conta?</Text>
-            <TouchableOpacity onPress={navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={styles.registerLink}>Faça login</Text>
             </TouchableOpacity>
           </View>
@@ -57,15 +55,15 @@ export default function RegisterScreen ({navigation}){
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:'70',
+    paddingTop: '50',
     flex: 1,
     backgroundColor: '#f8f9fa',
-    justifyContent:'center',
-    alignContent:'center'
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -76,12 +74,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 15,
-    borderRadius: 50, 
-    borderWidth: 2,
-    borderColor: '#4285F4',
+      width: 10, 
+      height: 10,
+      padding:50,
   },
   title: {
     fontSize: 24,
@@ -126,13 +121,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     borderWidth: 2,
-  
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
-    
   },
   registerContainer: {
     flexDirection: 'row',
@@ -148,4 +141,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

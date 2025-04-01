@@ -1,5 +1,5 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import axios from 'axios';
 
 export default function LoginScreen({ navigation }) {
@@ -34,6 +34,7 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <Image source={require('../assets/logo.png')} style={styles.logo} />
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
@@ -60,9 +61,8 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.loginContainer}>
                 <Text style={styles.loginText}>Já possui uma conta?</Text>
                 <TouchableOpacity
-                    onPress={() => {
-                        if (!navigation.isFocused()) return;
-                        navigation.navigate('Register');}}>
+                    onPress={() => navigation.navigate('Register')}
+                >
                     <Text style={styles.loginLink}>Faça seu Cadastro</Text>
                 </TouchableOpacity>
             </View>
@@ -80,8 +80,13 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },
+    logo: {
+        width: 150, 
+        height: 150,
+        marginBottom: 20,
+    },
     title: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#333',
@@ -110,7 +115,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    RegiterContainer: {
+    loginContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: 20,
