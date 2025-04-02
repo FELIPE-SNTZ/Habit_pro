@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import React, { useState } from 'react';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function LoginScreen({ navigation }) {
     const [username, setUsername] = useState('');
@@ -15,11 +17,17 @@ export default function LoginScreen({ navigation }) {
 
         setLoading(true);
         try {
-            const response = await axios.post(`http://10.19.14.113:8000/auth/login/`, {
+            const response = await axios.post(`http://10.19.14.113:8000/api/token/`, {
                 username,
                 password,
             });
             if (response.status === 200) {
+                const { access, refresh } = response.data;
+
+                await AsyncStorage.setItem('access_token', access);
+                await AsyncStorage.setItem('refresh_token', refresh);
+
+
                 navigation.navigate('Home');
             } else {
                 Alert.alert('Erro', 'Login falhou. Verifique suas credenciais.');
@@ -54,15 +62,13 @@ export default function LoginScreen({ navigation }) {
             <TouchableOpacity
                 style={[styles.button, loading && { backgroundColor: '#aaa' }]}
                 onPress={handleLogin}
-                disabled={loading}
-            >
+                disabled={loading} >
                 <Text style={styles.buttonText}>{loading ? 'Carregando...' : 'Login'}</Text>
             </TouchableOpacity>
             <View style={styles.loginContainer}>
                 <Text style={styles.loginText}>Já possui uma conta?</Text>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('Register')}
-                >
+                    onPress={() => navigation.navigate('Register')} >
                     <Text style={styles.loginLink}>Faça seu Cadastro</Text>
                 </TouchableOpacity>
             </View>
@@ -81,12 +87,12 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
     },
     logo: {
-        width: 150, 
+        width: 150,
         height: 150,
         marginBottom: 20,
     },
     title: {
-        fontSize: 26,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#333',

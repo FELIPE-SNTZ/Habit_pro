@@ -1,11 +1,55 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, Alert } from 'react-native';
+import React, { useState } from 'react';
+import axios from 'axios';
+
 
 export default function RegisterScreen({ navigation }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'As senhas não coincidem.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://10.19.14.113:8000/api/register/', {
+        name: name,
+        email,
+        password,
+      });
+
+      if (response.status === 201) {
+        console.log('Conta criada com sucesso:', response.data);
+        Alert.alert('Sucesso', 'Conta criada com sucesso!');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Erro', 'Falha ao criar conta. Tente novamente.');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Ocorreu um erro ao tentar criar a conta.');
+      console.error('Error during registration:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
+          <Text style={styles.titleHabit}>HABITPRIME</Text>
           <Text style={styles.title}>Crie sua conta</Text>
         </View>
 
@@ -15,6 +59,8 @@ export default function RegisterScreen({ navigation }) {
             <TextInput
               style={styles.input}
               placeholder="Digite seu nome"
+              value={name}
+              onChangeText={setName}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -24,6 +70,8 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Digite seu e-mail"
               keyboardType="email-address"
               autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -32,6 +80,8 @@ export default function RegisterScreen({ navigation }) {
               style={styles.input}
               placeholder="Digite sua senha"
               secureTextEntry
+              value={password}
+              onChangeText={setPassword}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -40,10 +90,12 @@ export default function RegisterScreen({ navigation }) {
               style={styles.input}
               placeholder="Confirme sua senha"
               secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
             />
           </View>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Cadastrar</Text>
+          <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={loading}>
+            <Text style={styles.buttonText}>{loading ? 'Carregando...' : 'Cadastrar'}</Text>
           </TouchableOpacity>
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Já tem uma conta?</Text>
@@ -59,7 +111,7 @@ export default function RegisterScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: '50',
+    paddingTop: '',
     flex: 1,
     backgroundColor: '#f8f9fa',
     justifyContent: 'center',
@@ -71,17 +123,23 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   logo: {
-      width: 10, 
-      height: 10,
-      padding:50,
+      width: 0, 
+      height: 0,
+      padding:60,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+  },
+  titleHabit: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 0,
   },
   card: {
     backgroundColor: '#fff',
